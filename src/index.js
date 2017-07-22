@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import YTSearch from 'youtube-api-search';
 import SearchBar from './components/searchbar';
 import VideoList from './components/videoList';
+import VideoDetail from './components/videoDetail';
 const API_KEY = 'AIzaSyAL2i7aRbNuz-v5efXdDDuAB6gZN4m4Bhg';
 
 
@@ -18,12 +19,13 @@ class App extends Component {
             // we set this in the constructor because we want to see a list of videos every time the
             // ...app is started
         });
-    }
+    };
 
     render() {
         return (
             <div>
                 <SearchBar />
+                <VideoDetail video={this.state.videos[0]} />
                 <VideoList videos={this.state.videos} />
             </div>
         );
