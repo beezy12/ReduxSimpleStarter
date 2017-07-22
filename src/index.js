@@ -11,22 +11,34 @@ class App extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { videos: [] };
+        this.state = {
+            videos: [],
+            selectedVideo: null
+        };
 
+        // this is new es6 syntax, the same as setting state to {videos: videos}.
+        // we set this in the constructor because we want to see a list of videos every time the
+        // ...app is started
         YTSearch({key: API_KEY, term: 'stoicism'}, (videos) => {
-            this.setState({ videos });
-            // this is new es6 syntax, the same as setting state to {videos: videos}.
-            // we set this in the constructor because we want to see a list of videos every time the
-            // ...app is started
+            console.log('checking out the vids', videos);
+            this.setState({
+                videos: videos,
+                selectedVideo: videos[0]
+            });
         });
     };
 
+// **** IMPORTANT: the 'onVideoSelect' is a callback that we are passing down as a prop through to
+// ...videoListItem. Whenever that function is called down in the child, it sets the state up here, in
+// ...the parent.
     render() {
         return (
             <div>
                 <SearchBar />
-                <VideoDetail video={this.state.videos[0]} />
-                <VideoList videos={this.state.videos} />
+                <VideoDetail video={this.state.selectedVideo} />
+                <VideoList
+                    onVideoSelect={selectedVideo => this.setState({selectedVideo}) }
+                    videos={this.state.videos} />
             </div>
         );
     }
