@@ -17,9 +17,16 @@ class SearchBar extends Component {
             <div className="search-bar">
                 <input
                     value={this.state.term}
-                    onChange={event => this.setState({ term: event.target.value })} />
+                    onChange={event => this.onInputChange(event.target.value)} />
             </div>
         );
+    }
+
+    onInputChange(term) {
+        // have to set state AND call the passed down callback here. have to set state to get
+        // input characters to show as the user types
+        this.setState({term});
+        this.props.onSearchTermChange(term);
     }
 }
 

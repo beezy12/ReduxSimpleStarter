@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import YTSearch from 'youtube-api-search';
@@ -16,25 +17,30 @@ class App extends Component {
             selectedVideo: null
         };
 
-        // this is new es6 syntax, the same as setting state to {videos: videos}.
-        // we set this in the constructor because we want to see a list of videos every time the
-        // ...app is started
-        YTSearch({key: API_KEY, term: 'stoicism'}, (videos) => {
+        this.videoSearch('stoicism');
+    };
+
+    videoSearch(term) {
+        YTSearch({key: API_KEY, term: term}, (videos) => {
             console.log('checking out the vids', videos);
             this.setState({
                 videos: videos,
                 selectedVideo: videos[0]
             });
         });
-    };
+    }
 
-// **** IMPORTANT: the 'onVideoSelect' is a callback that we are passing down as a prop through to
-// ...videoListItem. Whenever that function is called down in the child, it sets the state up here, in
-// ...the parent.
+
+    // **** IMPORTANT: the 'onVideoSelect' is a callback that we are passing down as a prop through to
+    // ...videoListItem. Whenever that function is called down in the child, it sets the state up here, in
+    // ...the parent.
+    // debounce just slows down the search. you can only call the search function once every 3 seconds
     render() {
+        const videoSearch = _.debounce((term) => { this.videoSearch(term) }, 300);
+
         return (
             <div>
-                <SearchBar />
+                <SearchBar onSearchTermChange={videoSearch} />
                 <VideoDetail video={this.state.selectedVideo} />
                 <VideoList
                     onVideoSelect={selectedVideo => this.setState({selectedVideo}) }
